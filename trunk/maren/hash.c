@@ -28,7 +28,7 @@
  * good distributions of elements into the has-buckets. Anyone an
  * idea, who invented this thing? */ 
 unsigned long
-elcs_binary_hash( unsigned long init, const void* key, size_t numByte )
+maren_binary_hash( unsigned long init, const void* key, size_t numByte )
 {
   while ( numByte > 0 ) {
     init ^= (init << 7) ^ (*(char*)key) ^ (init >> 3);

@@ -1,0 +1,37 @@
+digraph MAReN {
+	"0x804b028" [ label="5@0x804b028", shape=ellipse ];
+	"0x804b028" -> "0x804b008";
+	"0x804b008" [ label="LDC-start", shape=box ];
+	"0x804b008" -> "0x804b0d8" [ label="\\" ];
+	"0x804b0d8" [ label="0/1;0/1: end-to-start match", shape=diamond ];
+	"0x804b0d8" -> "0x804b150";
+	"0x804b150" [ label="0;1/2: a_num equal", shape=box ];
+	"0x804b150" -> "0x804b1a0";
+	"0x804b1a0" [ label="0;1/2: b_num equal", shape=box ];
+	"0x804b1a0" -> "0x804b1f0";
+	"0x804b1f0" [ label="start + end", shape=trapezium ];
+	"0x804b090" [ label="5@0x804b090", shape=ellipse ];
+	"0x804b090" -> "0x804b070";
+	"0x804b070" [ label="LDC-end", shape=box ];
+	"0x804b070" -> "0x804b0d8" [ label="/" ];
+	"0x804b270" [ label="5@0x804b270", shape=ellipse ];
+	"0x804b270" -> "0x804b250";
+	"0x804b250" [ label="LDC-start", shape=box ];
+	"0x804b250" -> "0x804b328" [ label="\\" ];
+	"0x804b328" [ label="0/1;0/1: end-to-start match", shape=diamond ];
+	"0x804b328" -> "0x804b3a0";
+	"0x804b3a0" [ label="0;1/2: a_num equal", shape=box ];
+	"0x804b3a0" -> "0x804b3f0";
+	"0x804b3f0" [ label="0;1/2: b_num equal", shape=box ];
+	"0x804b3f0" -> "0x804b440";
+	"0x804b440" [ label="start + intm, recurse", shape=trapezium ];
+	"0x804b2d8" [ label="5@0x804b2d8", shape=ellipse ];
+	"0x804b2d8" -> "0x804b2b8";
+	"0x804b2b8" [ label="LDC-intermediate", shape=box ];
+	"0x804b2b8" -> "0x804b328" [ label="/" ];
+}
+(0123 4321 0 10 1) + (0123 4321 10 7 2) = (0123 4321 0 17 1) ->
+Delete CDR:0123 4321 10 7 2
+(0123 4321 0 17 1) + (0123 4321 17 4 3) = (0123 4321 0 21 0) !
+Delete CDR:0123 4321 17 4 3
+Delete CDR:0123 4321 0 21 0

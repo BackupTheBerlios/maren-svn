@@ -89,7 +89,7 @@ const void* maren_hash_search( MarenHash* hash,
 int maren_hash_optimize( MarenHash* hash );
 
 unsigned long
-maren_binary_hash( unsigned long init, const char* key, size_t numByte );
+maren_binary_hash( unsigned long init, const void* key, size_t numByte );
 
 MAREN_END_DECL
 #endif /* MAREN_HASH_H */

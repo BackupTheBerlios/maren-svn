@@ -6,3 +6,6 @@ bin_PROGRAMS = ut_rule ut_add_fact ut_rt_assert ut_ctx_prio_insert \
 utAddFact_SOURCES = utAddFact.cc
 
 LDADD = ../maren/libMAReN.la
+
+check:
+	run_tests.sh $(bin_PROGRAMS)

@@ -48,10 +48,14 @@ prio_upper_bound( MarenContext* ctx, int prio, bool* hit )
     return ctx->prios;
   }
 
-  size_t u;
-  if ( prio > ctx->prios[ u = ctx->prio_num - 1 ].prio ) {
+  size_t u = ctx->prio_num - 1;
+  if ( prio > ctx->prios[ u ].prio ) {
     *hit = false;
     return NULL;
+  }
+  else if ( prio == ctx->prios[ u ].prio ) {
+    *hit = true;
+    return ctx->prios + u;
   }
   
   int p;
