@@ -127,7 +127,8 @@ maren_rule_add_single_check( MarenDList* rule,
 
   MarenInnerNode* it = MAREN_INNER(start);
   while ( it->succ_num == 1
-	  && maren_node_is_inner( it->succs->node ) )
+	  && (maren_node_is_start( it->succs->node )
+	      || maren_node_is_single( it->succs->node )) )
   {
     it = MAREN_INNER(it->succs->node);
   }

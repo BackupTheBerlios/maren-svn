@@ -47,7 +47,11 @@ AC_ARG_ENABLE(build-config,
 
 AC_ARG_ENABLE(check-node-casts,
   AS_HELP_STRING([--enable-check-node-casts],
-                 [Check validity of target type when casting node-pointers. [[default=no]]]),
+                 [Check validity of target type when casting node-pointers. \
+		  This check is supposed to be obsolete, if this \
+		  software-package works correct. Enable it, if you are \
+		  working on MAReN itself. As a user, that is concerned \
+		  about performance, you should disable it. [[default=no]]]),
   [case "${enableval}" in
 	yes) CFLAGS=${CFLAGS}" -DMAREN_CHECK_NODE_CASTS";
              CXXFLAGS=${CXXFLAGS}" -DMAREN_CHECK_NODE_CASTS";;
@@ -71,5 +75,7 @@ AC_ARG_ENABLE(pmf-conversion,
 
 AC_CONFIG_FILES([./Makefile
                  maren/Makefile
-		 tst/Makefile])
+		 tst/Makefile
+		 examples/Makefile
+		 examples/fire-c-basic/Makefile])
 AC_OUTPUT
