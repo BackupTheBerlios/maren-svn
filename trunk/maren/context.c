@@ -165,6 +165,8 @@ maren_context_ctor( void* where )
   return ret;
 }
 
+extern void delete_rule_node( struct sMarenContext* ctx, MarenNode* node );
+
 /** \todo Resemble all extensions due to the priority processing. */
 void
 maren_context_dtor( MarenContext* ctx )
@@ -183,8 +185,22 @@ maren_context_dtor( MarenContext* ctx )
       pit++;
     }
   }
-
+  
+  if ( ctx->prios ) {
+    assert( ctx->tmpp );
+    free( ctx->prios );
+    free( ctx->tmpp );
+  }
+  
   if ( ctx->start_hash ) {
+    MarenHashIter hit;
+    MarenStartNode* sn = MAREN_START(maren_hash_iter_begin(&hit,
+							   ctx->start_hash));
+    while ( sn ) {
+      delete_rule_node( ctx, MAREN_NODE(sn) );
+      sn = (MarenStartNode*)maren_hash_iter_next( &hit );
+    }
+    
     maren_hash_delete( ctx->start_hash, true );
     ctx->start_hash = NULL;
   }
@@ -331,7 +347,6 @@ walk_down( MarenContext* ctx,
 	maren_dlist_append( &(MAREN_DCHKJ(node)->r_list), (MarenDList*)acts );
 	m_fact = maren_active_set_get( acts, MAREN_DCHKJ(node)->r_idx );
 	o_idx = MAREN_DCHKJ(node)->l_idx;
-
 	maren_dlist_for_each( o_set, &(MAREN_DCHKJ(node)->l_list) ) {
 	  if ( MAREN_DCHKJ(node)->check( MAREN_DCHKJ(node)->data,
 			 maren_active_set_get( (MarenActiveSet*)o_set, o_idx ),

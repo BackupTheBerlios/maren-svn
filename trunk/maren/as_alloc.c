@@ -69,6 +69,7 @@ maren_active_set_alloc_dtor( MarenActiveSetAlloc* alloc )
       free( it->mem );
       it->mem = tmp;
     }
+    it++;
   }
   free( alloc->slots );
 }

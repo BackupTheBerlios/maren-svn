@@ -25,6 +25,10 @@
 void
 maren_inner_node_dtor( MarenInnerNode* node )
 {
+  if ( node->succs ) {
+    assert( node->succ_num > 0 );
+    free( node->succs );
+  }
   maren_node_dtor( MAREN_NODE(node) );
 }
 

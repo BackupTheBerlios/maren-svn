@@ -21,6 +21,8 @@
  *
  * This file is part of the software package MAReN */
 
+#include <stddef.h>
+
 #include "decls.h"
 
 MAREN_BEGIN_DECL
@@ -32,7 +34,7 @@ typedef struct sMarenDList {
 #define MAREN_DLIST_INIT { NULL, NULL }
 
 #define maren_dlist_ctor( dlist_ptr ) \
-   (dlist_ptr)->p = (dlist_ptr)->n = NULL;
+   ((dlist_ptr)->p = (dlist_ptr)->n = NULL)
 
 void maren_dlist_append( MarenDList* l, MarenDList* n );
 void maren_dlist_join( MarenDList* first, MarenDList* second );

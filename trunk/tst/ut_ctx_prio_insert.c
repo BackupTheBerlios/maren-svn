@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
 
   maren_context_add_fact( &ctx, "Hello, world!", NULL );
 
-  
+  maren_context_dtor( &ctx );
 
   return rc;
 }
