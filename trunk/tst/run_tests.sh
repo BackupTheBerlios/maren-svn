@@ -16,7 +16,7 @@ run_unit_test () {
 
     echo "Running test: "${test} | tee -a ${tstlog}
 
-    ${test} 1> ${stdoutf} 2> ${stderrf}
+    ./${test} 1> ${stdoutf} 2> ${stderrf}
     res=$?
 
     test $res -eq 0 || echo " - result: "$res | tee -a ${tstlog}
@@ -59,7 +59,7 @@ show_diffs() {
     fi
 }
 
-if test $1 = "--show-diff"; then
+if test "$1" = "--show-diff"; then
     shift
     while test _$1 != _; do
 	show_diffs $1

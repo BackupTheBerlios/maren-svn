@@ -74,6 +74,8 @@ int maren_context_add_fact( MarenContext* ctx,
 			    const void* fact,
 			    void (*del_fact)(void*) );
 
+int maren_context_clear_facts( MarenContext* ctx );
+
 int maren_context_add_factc( MarenContext* ctx,
 			     struct sMarenFactContainer* fact_cntr );
 

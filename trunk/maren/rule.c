@@ -29,7 +29,8 @@
 #include "body_node.h"
 #include "std_join_node.h"
 
-void delete_rule_node( struct sMarenContext* ctx, MarenNode* node )
+void
+delete_rule_node( struct sMarenContext* ctx, MarenNode* node )
 {
   if ( maren_node_is_inner( node ) ) {
     MarenNodeLink *it = MAREN_INNER(node)->succs;

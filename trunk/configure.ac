@@ -17,6 +17,8 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+AC_PROG_YACC
+AC_PROG_LEX
 
 # Checks for libraries.
 
@@ -34,6 +36,7 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([memmove memset])
 
 # Checks for package features
 AC_ARG_ENABLE(build-config,
