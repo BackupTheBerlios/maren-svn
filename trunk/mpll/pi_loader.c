@@ -1,5 +1,3 @@
-#ifndef MARFEN_DOUBLE_CHECK_FN_H
-#define MARFEN_DOUBLE_CHECK_FN_H
 /* MAReN - Maren Aint a Rete Network
  * Copyright (C) 2004  Marcus Perlick
  * mailto: riffraff@users.berlios.de
@@ -20,13 +18,43 @@
  * USA
  *
  * This file is part of the software package MAReN */
+#include "pi_loader.h"
 
-#include "decls.h"
+#include <stdlib.h>
+#include <string.h>
 
-MAREN_BEGIN_DECL
+#include "pi_loader.h"
 
-typedef int (*MarenDoubleCheckFn)( const void* f1, const void* f2,
-				   const void* data );
+MpllPluginLoder*
+mpll_plugin_loader_ctor( void* where )
+{
+  MpllPluginLoder* ret = where ? where : malloc( sizeof(MpllPluginLoder) );
 
-MAREN_END_DECL
-#endif /* MARFEN_DOUBLE_CHECK_FN_H */
+  if ( ret ) {
+    maren_dlist_ctor( &ret->pi_paths );
+    ret->path_len_max = 0;
+  }
+
+  return ret;
+}
+
+void
+mpll_plugin_loader_add_path( MpllPluginLoder* loader, const char* path )
+{
+  maren_dlist_for_each( node, &loader->pi_paths ) {
+    if ( !strcmp( ((MpllPathNode*)node)->path, path ) ) {
+      return;
+    }
+  }
+
+  MpllPathNode* node = calloc( 1, sizeof(MpllPathNode) );
+
+  MAREN_RT_ASSERT( node != NULL, _("Malloc error.") );
+
+  node->path = path;
+  maren_dlist_append( &loader->pi_paths, (MarenDList*)node );
+
+  size_t len = strlen( path );
+  if ( len > loader->path_len_max )
+    loader->path_len_max = len;
+}

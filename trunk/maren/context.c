@@ -86,7 +86,7 @@ maren_context_add_rule( MarenContext* ctx, MarenDList* rule )
       if ( sn->hash_hint != NULL ) {
 	maren_hash_key_insert( ctx->start_hash,
 			       sn->hash_hint,
-			       start,
+			       sn,
 			       NULL );
 	start = maren_dlist_iter_rm( rule, start );
       }
@@ -129,6 +129,9 @@ maren_context_add_rule( MarenContext* ctx, MarenDList* rule )
 
     ctx->tmpp = realloc( ctx->tmpp,
 			 ctx->prio_num * sizeof(MarenActivePriority) );
+    memcpy( ctx->tmpp,
+	    ctx->prios,
+	    ctx->prio_num * sizeof(MarenActivePriority) );
     
     MAREN_RT_ASSERT( ctx->tmpp != NULL, _("Memory allocation error!") );    
   }
@@ -247,11 +250,11 @@ walk_down( MarenContext* ctx,
 	  lit = MAREN_INNER(node)->succs;
 	  lend = lit + MAREN_INNER(node)->succ_num;
 	  while ( lit < lend ) {
-	    walk_down( ctx,
-		       lit->node,
-		       lit->type,
-		       maren_active_set_join( acts,
-					      (MarenActiveSet*)o_set ) );
+	    ret += walk_down( ctx,
+			      lit->node,
+			      lit->type,
+			      maren_active_set_join( acts,
+						   (MarenActiveSet*)o_set ) );
 	    lit++;
 	  }
 	}
@@ -263,11 +266,11 @@ walk_down( MarenContext* ctx,
 	  lit = MAREN_INNER(node)->succs;
 	  lend = lit + MAREN_INNER(node)->succ_num;
 	  while ( lit < lend ) {
-	    walk_down( ctx,
-		       lit->node,
-		       lit->type,
-		       maren_active_set_join( (MarenActiveSet*)o_set,
-					      acts ) );
+	    ret += walk_down( ctx,
+			      lit->node,
+			      lit->type,
+			      maren_active_set_join( (MarenActiveSet*)o_set,
+						     acts ) );
 	    lit++;
 	  }
 	}
@@ -297,11 +300,11 @@ walk_down( MarenContext* ctx,
 	    lit = MAREN_INNER(node)->succs;
 	    lend = lit + MAREN_INNER(node)->succ_num;
 	    while ( lit < lend ) {
-	      walk_down( ctx,
-			 lit->node,
-			 lit->type,
-			 maren_active_set_join( acts,
-						(MarenActiveSet*)o_set ) );
+	      ret += walk_down( ctx,
+				lit->node,
+				lit->type,
+				maren_active_set_join( acts,
+						    (MarenActiveSet*)o_set ) );
 	      lit++;
 	    }
 	  }    
@@ -321,11 +324,11 @@ walk_down( MarenContext* ctx,
 	    lit = MAREN_INNER(node)->succs;
 	    lend = lit + MAREN_INNER(node)->succ_num;
 	    while ( lit < lend ) {
-	      walk_down( ctx,
-			 lit->node,
-			 lit->type,
-			 maren_active_set_join( (MarenActiveSet*)o_set,
-						acts ) );
+	      ret += walk_down( ctx,
+				lit->node,
+				lit->type,
+				maren_active_set_join( (MarenActiveSet*)o_set,
+						       acts ) );
 	      lit++;
 	    }
 	  }
@@ -351,7 +354,7 @@ walk_down( MarenContext* ctx,
       assert( hit );
 
       if ( ap->first_active ) {
-	ap->last_active->p2 = acts;
+	ap->last_active->p1 = acts;
 	ap->last_active = acts;
       }
       else {

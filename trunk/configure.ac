@@ -75,6 +75,7 @@ AC_ARG_ENABLE(pmf-conversion,
 
 AC_CONFIG_FILES([./Makefile
                  maren/Makefile
+		 mpll/Makefile
 		 tst/Makefile
 		 examples/Makefile
 		 examples/fire-c-basic/Makefile])

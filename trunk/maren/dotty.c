@@ -87,7 +87,20 @@ print_node( FILE* os, const MarenNode* node )
     MarenNodeLink* end = it + MAREN_INNER(node)->succ_num;
 
     while ( it < end ) {
-      fprintf( os, "\t\"%p\" -> \"%p\";\n", node, it->node );
+      fprintf( os, "\t\"%p\" -> \"%p\"", node, it->node );
+      switch ( it->type ) {
+      case MAREN_NL_LEFT:
+	fprintf( os, " [ label=\"\\\\\" ]" );
+	break;
+
+      case MAREN_NL_RIGHT:
+	fprintf( os, " [ label=\"/\" ]" );
+	break;
+
+      default:
+	;
+      }
+      fprintf( os, ";\n" );
       it++;
     }
   }

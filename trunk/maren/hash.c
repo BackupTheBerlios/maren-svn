@@ -28,14 +28,14 @@
  * good distributions of elements into the has-buckets. Anyone an
  * idea, who invented this thing? */ 
 unsigned long
-maren_binary_hash( unsigned long init, const char* key, size_t numByte )
+elcs_binary_hash( unsigned long init, const void* key, size_t numByte )
 {
   while ( numByte > 0 ) {
-    init ^= (init << 7) ^ (*key) ^ (init >> 3);
+    init ^= (init << 7) ^ (*(char*)key) ^ (init >> 3);
     if ( --numByte == 0 )
       break;
     key++;
-    init ^= ~((init << 11) ^ (*key) ^ (init >> 5));
+    init ^= ~((init << 11) ^ (*(char*)key) ^ (init >> 5));
     numByte--, key++;
   }
 
@@ -89,7 +89,7 @@ maren_hash_iter_begin( MarenHashIter* iter, const MarenHash* hash )
 {
   iter->hash = hash;
   iter->bucket = hash->buckets;
-  if ( !(iter->frame == *(iter->bucket)) ) {
+  if ( !(iter->frame = *(iter->bucket)) ) {
     MarenHashBucket** bEnd = hash->buckets + hash->bnum;
     do {
       if ( ++(iter->bucket) >= bEnd ) {
@@ -295,6 +295,7 @@ const void* maren_hash_search( MarenHash* hash,
 	iter->bucket = bucket;
 	iter->frame = frame;
       }
+      break;
     }
     frame = frame->next;
   }

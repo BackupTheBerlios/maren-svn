@@ -2,21 +2,25 @@ AM_CFLAGS = -std=c99 -D_\(txt\)=txt
 
 lib_LTLIBRARIES = libMAReN.la
 
-libMAReN_la_SOURCES = body_node.c \
-		      dlist.c \
-		      double_node.c \
-		      inner_node.c \
-		      single_node.c \
-		      start_node.c \
-		      join_node.c \
-		      std_join_node.c \
-		      dchk_join_node.c \
-		      active_set.c \
-		      fact_container.c \
-		      rule.c \
-		      node.c \
-		      context.c \
-		      dotty.c \
-		      decls.c \
-		      std_tests.c \
-		      hash.c
+libMAReN_la_SOURCES = body_node.c body_node.h \
+		      dlist.c dlist.h\
+		      double_node.c double_node.h \
+		      inner_node.c inner_node.h \
+		      single_node.c single_node.h \
+		      start_node.c start_node.h \
+		      join_node.c join_node.h \
+		      std_join_node.c std_join_node.h \
+		      dchk_join_node.c dchk_join_node.h \
+		      active_set.c active_set.h \
+		      fact_container.c fact_container.h \
+		      rule.c rule.h \
+		      node.c node.h \
+		      context.c context.h \
+		      dotty.c dotty.h \
+		      decls.c decls.h \
+		      std_tests.c std_test.h \
+		      hash.c hash.h \
+		      maren.h \
+		      ActiveSet.hh Context.hh FactContainer.hh \
+		      FunctionObjects.hh Internal.hh Maren.hh \
+		      Node.hh Rule.hh

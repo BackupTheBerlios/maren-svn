@@ -1,1 +1,1 @@
-SUBDIRS = maren tst doc
+SUBDIRS = maren mpll tst doc
