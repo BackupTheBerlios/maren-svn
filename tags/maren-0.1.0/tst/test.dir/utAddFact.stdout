@@ -1,0 +1,37 @@
+digraph MAReN {
+	"0x804c038" [ label="5@0x804c038", shape=ellipse ];
+	"0x804c038" -> "0x804c018";
+	"0x804c018" [ label="LDC-start", shape=box ];
+	"0x804c018" -> "0x804c0f8" [ label="\\" ];
+	"0x804c0f8" [ label="0/1;0/1: end-to-start match", shape=diamond ];
+	"0x804c0f8" -> "0x804c180";
+	"0x804c180" [ label="0;1/2: a_num equal", shape=box ];
+	"0x804c180" -> "0x804c1e0";
+	"0x804c1e0" [ label="0;1/2: b_num equal", shape=box ];
+	"0x804c1e0" -> "0x804c230";
+	"0x804c230" [ label="2@0x804c230", shape=trapezium ];
+	"0x804c0b0" [ label="5@0x804c0b0", shape=ellipse ];
+	"0x804c0b0" -> "0x804c090";
+	"0x804c090" [ label="LDC-last", shape=box ];
+	"0x804c090" -> "0x804c0f8" [ label="/" ];
+	"0x804c2b0" [ label="5@0x804c2b0", shape=ellipse ];
+	"0x804c2b0" -> "0x804c290";
+	"0x804c290" [ label="LDC-start", shape=box ];
+	"0x804c290" -> "0x804c378" [ label="\\" ];
+	"0x804c378" [ label="0/1;0/1: end-to-start match", shape=diamond ];
+	"0x804c378" -> "0x804c400";
+	"0x804c400" [ label="0;1/2: a_num equal", shape=box ];
+	"0x804c400" -> "0x804c460";
+	"0x804c460" [ label="0;1/2: b_num equal", shape=box ];
+	"0x804c460" -> "0x804c4b0";
+	"0x804c4b0" [ label="2@0x804c4b0", shape=trapezium ];
+	"0x804c328" [ label="5@0x804c328", shape=ellipse ];
+	"0x804c328" -> "0x804c308";
+	"0x804c308" [ label="LDC-intermediate", shape=box ];
+	"0x804c308" -> "0x804c378" [ label="/" ];
+}
+(0123 4321 0 10 1) + (0123 4321 10 7 2) = (0123 4321 0 17 1) ->
+0123 4321 10 7 2
+(0123 4321 0 17 1) + (0123 4321 17 4 3) = (0123 4321 0 21 0) !
+0123 4321 0 21 0
+0123 4321 17 4 3

@@ -1,0 +1,2 @@
+maren:main:28:failed `1 == 0':OK, this has to fail!
+lt-ut_rt_assert: ut_rt_assert.c:28: main: Assertion `1 == 0' failed.

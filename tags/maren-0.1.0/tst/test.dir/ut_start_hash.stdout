@@ -1,0 +1,18 @@
+digraph MAReN {
+	"0x8052d70" [ label="start3", shape=ellipse ];
+	"0x8052d70" -> "0x8052e48" [ label="/" ];
+	"0x8052cc8" [ label="start0", shape=ellipse ];
+	"0x8052cc8" -> "0x8052da8" [ label="\\" ];
+	"0x8052da8" [ label="1;1: 45@0x8052da8", shape=diamond ];
+	"0x8052da8" -> "0x8052df8" [ label="\\" ];
+	"0x8052df8" [ label="2;1: 45@0x8052df8", shape=diamond ];
+	"0x8052df8" -> "0x8052e48" [ label="\\" ];
+	"0x8052e48" [ label="3;1: 45@0x8052e48", shape=diamond ];
+	"0x8052e48" -> "0x8052e98";
+	"0x8052e98" [ label="print string", shape=trapezium ];
+	"0x8052d38" [ label="start2", shape=ellipse ];
+	"0x8052d38" -> "0x8052df8" [ label="/" ];
+	"0x8052d00" [ label="start1", shape=ellipse ];
+	"0x8052d00" -> "0x8052da8" [ label="/" ];
+}
+Action: start0 start start start3
