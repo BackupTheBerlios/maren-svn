@@ -74,7 +74,7 @@ AC_ARG_ENABLE(pmf-conversion,
    [CXXFLAGS=${CXXFLAGS}" -Wno-pmf-conversions -DMAREN_USE_PMF_CONVERSION"])
 
 AC_ARG_ENABLE(custom-as-allocator,
-  AS_HELP_STRING([-enable-custom-as-allocator],
+  AS_HELP_STRING([--enable-custom-as-allocator],
 		 [Active Sets (as) are those things, which are rapidly \
                   allocated and deallocated during fact-insertion and \
                   fact-removal. So one may use a custom allocator for \

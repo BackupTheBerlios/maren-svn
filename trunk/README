@@ -1,0 +1,53 @@
+First of all: Since I built in the optimized allocator for active
+sets, the C++ wrapper appears to be broken. So do _not_ use it in this
+release. When the C core of the library stabilizes, I will continue to
+work on the C++ wrapper, again.
+
+For more information about MAReN, go to the doc directory and try to
+build the reference manual using Doxygen (If you don't have it,
+http://www.doxygen.org might bring you there?!).
+
+There are some brief descriptions for the package-specific
+configuration options:
+
+--enable-build-config = (dev|ship)
+==================================
+By default, autoconf sets the compiler flags -g -O2. If you want
+something different - as I do e.g. during development - you may set
+this option to
+
+- dev : This will give you -ggdb -Wall as compile flags instead of the
+  defaults.
+
+- ship: This sets the compile flags -O2 -NDEBUG which will give you
+  optimization and removes all the asserts, which I made extensive
+  use. Removing the standard assert() should be safe. For assertions,
+  that check for runtime-dependent conditions, there is
+  MAREN_RT_ASSERT, which you cannot switch off.
+
+
+--enable-check-node-casts = (yes|no) [default=no]
+=================================================
+This is a pure development feature, which can safely be switched off
+in carefully tested distributions. The background of this feature is
+the OO design (single inheritance) of the rete network nodes. The
+design leads to a lot of casts between the different nodes types. The
+lib has means to check, whether a cast is legal or not (comparable to
+the dynamic_cast<>() of C++).
+
+--enable-pmf-conversion = (yes|no) [default=yes]
+================================================
+This feature is for the C++ wrapper. It lets one pass C++ objects and
+one of their member-functions to the C API callbacks. Without
+pmf-conversion (convert bound pointer to member functions into plain C
+function pointers), I had to write special wrapper functions, which
+are not yet implemented.
+
+--enable=custom-as-allocator = (yes|no) [default=no]
+====================================================
+Active Sets (as) are those things, which are rapidly allocated and
+deallocated during fact-insertion and fact-removal. So using a custom
+allocator for active-sets might speed up thing significantly. This
+allocator is not yet carefully tested, but seems to work in the
+supplied unit tests. However, there are still no benchmark, which make
+the performance measurable.

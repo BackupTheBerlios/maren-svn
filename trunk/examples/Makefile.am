@@ -1,1 +1,1 @@
-SUBDIRS = fire-c-basic mpll-demo
+SUBDIRS = fire-c-basic

@@ -18,9 +18,10 @@ libMAReN_la_SOURCES = body_node.c body_node.h \
 		      context.c context.h \
 		      dotty.c dotty.h \
 		      decls.c decls.h \
-		      std_tests.c std_test.h \
+		      std_tests.c std_tests.h \
 		      hash.c hash.h \
 		      as_alloc.c as_alloc.h \
+		      node_functions.h \
 		      maren.h \
 		      ActiveSet.hh Context.hh FactContainer.hh \
 		      FunctionObjects.hh Internal.hh Maren.hh \

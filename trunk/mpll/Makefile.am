@@ -5,4 +5,4 @@ lib_LTLIBRARIES = libmpll.la
 libmpll_la_SOURCES = \
 		pi_loader.c pi_loader.h \
 		plugin.c plugin.h \
-		plugin_interface.h
+		pi_interface.h

@@ -6,3 +6,5 @@ all:
 
 clean:
 	rm -rf refman-c refman-cpp
+
+distdir:

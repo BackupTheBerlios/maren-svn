@@ -43,7 +43,31 @@ run_unit_test () {
     fi
 }
 
-while test _$1 != _; do
-    run_unit_test $1
+show_diffs() {
+    test=$1
+    stdouto=${tstdir}/${test}.stdout
+    stderro=${tstdir}/${test}.stderr
+    stdoutf=${stdouto}.current
+    stderrf=${stderro}.current
+
+    if test -f $stdoutf; then
+	diff $stdouto $stdoutf
+    fi
+
+    if test -f $stderrf; then
+	diff $stderro $stderrf
+    fi
+}
+
+if test $1 = "--show-diff"; then
     shift
-done
+    while test _$1 != _; do
+	show_diffs $1
+	shift
+    done
+else
+    while test _$1 != _; do
+	run_unit_test $1
+	shift
+    done
+fi
