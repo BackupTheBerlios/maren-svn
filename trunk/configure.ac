@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(MAReN, 0.1.0, marcus.perlick@gmx.de)
+AC_INIT(MAReN, 0.1.0, marcus.perlick@gmx.de,maren)
 AC_CONFIG_SRCDIR([maren/dlist.c])
 AC_CONFIG_HEADER([config.h])
 

@@ -9,5 +9,5 @@ utAddFact_SOURCES = utAddFact.cc
 
 LDADD = ../maren/libMAReN.la
 
-check:
+unittest:
 	@./run_tests.sh $(bin_PROGRAMS)
