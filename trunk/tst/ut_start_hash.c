@@ -1,5 +1,3 @@
-#ifndef MAREN_START_NODE_H
-#define MAREN_START_NODE_H
 /* MAReN - Maren Aint a Rete Network
  * Copyright (C) 2004  Marcus Perlick
  * mailto: riffraff@users.berlios.de
@@ -20,33 +18,42 @@
  * USA
  *
  * This file is part of the software package MAReN */
+#include <string.h>
+#include <maren/maren.h>
+#include <maren/hash.h>
 
-#include "inner_node.h"
-#include "dlist.h"
+static const void*
+get_fact_key( const void* fact, void(**del_key)(void*) )
+{
+  del_key = NULL;
+  return fact;
+}
 
-MAREN_BEGIN_DECL
+unsigned long
+hash_fact( const void* fact )
+{
+  return maren_binary_hash( 0, fact, strlen( (const char*)fact ) );
+}
 
-typedef struct {
-  MarenInnerNode base;		/**< Must be 1st in struct. */
-  MarenDList list;		/**< Must be 2nd in struct. */
-  const void* hash_hint;
-  void(*del_hash_hint)(void*);
-} MarenStartNode;
+int main( int argc, char *argv[] )
+{
+  int rc = 0;
+  MarenContext ctx = MAREN_CONTEXT_INIT;
+  MarenDList rule = MAREN_DLIST_INIT;
+  MarenNodePtr node;
 
-#ifdef MAREN_CHECK_NODE_CASTS
-# define MAREN_START(node_ptr) \
-   (assert( maren_node_is_start( node_ptr ) ), \
-    ((MarenStartNode*)(node_ptr)))
-#else
-# define MAREN_START(node_ptr) ((MarenStartNode*)(node_ptr))
-#endif
+  maren_context_set_start_hash( &ctx,
+				get_fact_key,
+				hash_fact,
+				(int(*)(const void*,const void*))strcmp,
+				0 );
+  
+  node = maren_rule_set_start_hash_hint( &rule,
+					 0,
+					 "node1",
+					 NULL );
+  maren_node_set_dbg_info( node, "node1" );
+  
 
-MarenStartNode* maren_start_node_ctor( void* where, MarenDList* rule );
-
-void maren_start_node_dtor( MarenStartNode* node );
-#define maren_start_node_delete( node ) \
-   maren_start_node_dtor( node ); \
-   free( node )
-
-MAREN_END_DECL
-#endif /* MAREN_START_NODE_H */
+  return rc;
+}

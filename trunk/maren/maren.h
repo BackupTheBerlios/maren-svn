@@ -40,6 +40,8 @@ MAREN_BEGIN_DECL
 
 struct sMarenNode;
 typedef struct sMarenNode* MarenNodePtr;
+
+MarenNodePtr maren_rule_get_start( MarenDList* rule, unsigned long idx );
 void maren_node_set_dbg_info( struct sMarenNode* node, const char* txt, ... );
 void maren_node_set_dbg_info_va( struct sMarenNode* node,
 				 const char* txt,

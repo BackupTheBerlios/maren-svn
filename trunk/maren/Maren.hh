@@ -21,6 +21,13 @@
  *
  * This file is part of the software package MAReN */
 
+/** \file Maren.hh
+ *
+ *  \brief The user C++ API include-file.
+ *
+ *  This is the entry-point for application developers that use the
+ *  C++ interface. */
+
 #include "FunctionObjects.hh"
 #include "Context.hh"
 #include "ActiveSet.hh"

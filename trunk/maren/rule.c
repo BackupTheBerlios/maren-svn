@@ -29,33 +29,6 @@
 #include "body_node.h"
 #include "std_join_node.h"
 
-int
-maren_rule_get_prio( struct sMarenDList* rule )
-{
-  MAREN_RT_ASSERT( rule != NULL,
-		   _("Cannot get priority from an empty rule.") );
-
-  MarenDList* start = maren_dlist_first( rule );
-  MAREN_RT_ASSERT( start != NULL,
-		   _("Cannot get priority from an empty rule.") );
-  
-  MarenNode* node = (MarenNode*)(maren_dlist_iter_oget( start,
-							MarenStartNode,
-							list ));
-  while ( node ) {
-    if ( maren_node_is_inner( node ) ) {
-      assert( MAREN_INNER(node)->succ_num == 1 );
-      node = MAREN_INNER(node)->succs->node;
-    }
-    else {
-      assert( maren_node_is_body( node ) );
-      return MAREN_BODY(node)->prio;
-    }
-  }
-
-  MAREN_RT_FAIL( _("Cannot get priority from incomplete rule.") );
-}
-
 static void delete_rule_node( MarenNode* node )
 {
   if ( maren_node_is_inner( node ) ) {
@@ -83,8 +56,35 @@ maren_rule_dtor( MarenDList* rule )
   }
 }
 
+int
+maren_rule_get_prio( struct sMarenDList* rule )
+{
+  MAREN_RT_ASSERT( rule != NULL,
+		   _("Cannot get priority from an empty rule.") );
+
+  MarenDList* start = maren_dlist_first( rule );
+  MAREN_RT_ASSERT( start != NULL,
+		   _("Cannot get priority from an empty rule.") );
+  
+  MarenNode* node = (MarenNode*)(maren_dlist_iter_oget( start,
+							MarenStartNode,
+							list ));
+  while ( node ) {
+    if ( maren_node_is_inner( node ) ) {
+      assert( MAREN_INNER(node)->succ_num == 1 );
+      node = MAREN_INNER(node)->succs->node;
+    }
+    else {
+      assert( maren_node_is_body( node ) );
+      return MAREN_BODY(node)->prio;
+    }
+  }
+
+  MAREN_RT_FAIL( _("Cannot get priority from incomplete rule.") );
+}
+
 MarenStartNode*
-rule_get_start( MarenDList* rule, unsigned long idx )
+maren_rule_get_start( MarenDList* rule, unsigned long idx )
 {
   MarenDList* ret = maren_dlist_first( rule );
   
@@ -107,6 +107,24 @@ rule_get_start( MarenDList* rule, unsigned long idx )
   return maren_dlist_iter_oget( ret, MarenStartNode, list );
 }
 
+MarenNode*
+maren_rule_set_start_hash_hint( struct sMarenDList* rule,
+				unsigned int idx,
+				const void* hint,
+				void(*del_hint)(void*) )
+{
+  MarenStartNode* sn = maren_rule_get_start( rule, idx );
+  assert( sn );
+
+  if ( sn->hash_hint && sn->del_hash_hint )
+    sn->del_hash_hint( (void*)(sn->hash_hint) );
+  
+  sn->hash_hint = hint;
+  sn->del_hash_hint = del_hint;
+
+  return MAREN_NODE(sn);
+}
+
 /** \todo Error handling. */
 MarenNode*
 maren_rule_add_single_check( MarenDList* rule,
@@ -122,7 +140,7 @@ maren_rule_add_single_check( MarenDList* rule,
   if ( !newn )
     return NULL;
 
-  MarenStartNode* start = rule_get_start( rule, idx );
+  MarenStartNode* start = maren_rule_get_start( rule, idx );
   assert( start != NULL );
 
   MarenInnerNode* it = MAREN_INNER(start);
@@ -167,10 +185,10 @@ maren_rule_add_double_check( MarenDList* rule,
 			     void *data,
 			     void(*del_data)(void*) )
 {
-  MarenStartNode* l_start = rule_get_start( rule, l_idx );
+  MarenStartNode* l_start = maren_rule_get_start( rule, l_idx );
   assert( l_start != NULL );
   
-  MarenStartNode* r_start = rule_get_start( rule, r_idx );
+  MarenStartNode* r_start = maren_rule_get_start( rule, r_idx );
   assert( r_start != NULL );
 
   MarenInnerNode* l_end = MAREN_INNER(l_start);

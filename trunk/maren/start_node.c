@@ -31,6 +31,8 @@ maren_start_node_ctor( void* where, MarenDList* rule )
     maren_inner_node_ctor( (MarenInnerNode*)ret, MAREN_NT_START );
     maren_dlist_ctor( &ret->list );
     maren_dlist_append( rule, &ret->list );
+    ret->hash_hint = NULL;
+    ret->del_hash_hint = NULL;
   }
 
   return ret;
@@ -39,8 +41,12 @@ maren_start_node_ctor( void* where, MarenDList* rule )
 void
 maren_start_node_dtor( MarenStartNode* node )
 {
-  if ( node )
+  if ( node ) {
+    if ( node->hash_hint && node->del_hash_hint )
+      node->del_hash_hint( (void*)(node->hash_hint) );
+
     maren_inner_node_dtor( MAREN_INNER(node) );
+  }
 }
 
 MarenStartNode*

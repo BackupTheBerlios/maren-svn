@@ -102,6 +102,7 @@ maren_context_add_rule( MarenContext* ctx, MarenDList* rule )
 
   bool hit;
   MarenActivePriority* ap = prio_upper_bound( ctx, prio, &hit );
+  size_t ap_idx = ap - ctx->prios;
   
   if ( !hit ) {
     ctx->prios = realloc( ctx->prios,
@@ -110,10 +111,13 @@ maren_context_add_rule( MarenContext* ctx, MarenDList* rule )
     MAREN_RT_ASSERT( ctx->prios != NULL, _("Memory allocation error!") );
 
     if ( ap ) {
-      size_t ap_idx = ap - ctx->prios;
-      memmove( ctx->prios + ap_idx,
-	       ctx->prios + ap_idx + 1,
-	       ctx->prio_num - ap_idx );
+      memmove( ctx->prios + ap_idx + 1,
+	       ctx->prios + ap_idx,
+	       (ctx->prio_num - ap_idx) * sizeof(MarenActivePriority) );
+      
+      ctx->prios[ ap_idx ].prio = prio;
+      ctx->prios[ ap_idx ].first_active = NULL;
+      ctx->prios[ ap_idx ].last_active = NULL;
     }
     else {
       ctx->prios[ ctx->prio_num ].prio = prio;

@@ -62,6 +62,11 @@ void maren_rule_dtor( struct sMarenDList* rule );
 
 int maren_rule_get_prio( struct sMarenDList* rule );
 
+struct sMarenNode* maren_rule_set_start_hash_hint( struct sMarenDList* rule,
+						   unsigned int idx,
+						   const void* hint,
+						   void(*del_hint)(void*) );
+
 /** \brief Add a new single-check to the rule.
  *
  *  A single check is unary predicate, that can be evaluated with a

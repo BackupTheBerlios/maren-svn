@@ -24,6 +24,9 @@
 #include <string.h>
 #include <assert.h>
 
+/* Found it somewhere on the net! It's not my idea. It seems to make
+ * good distributions of elements into the has-buckets. Anyone an
+ * idea, who invented this thing? */ 
 unsigned long
 maren_binary_hash( unsigned long init, const char* key, size_t numByte )
 {
