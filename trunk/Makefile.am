@@ -1,0 +1,1 @@
+SUBDIRS = maren tst doc
