@@ -64,5 +64,9 @@ int main( int argc, char *argv[] )
     assert( ctx.prios[ i ].prio == p );
   }
 
+  maren_context_add_fact( &ctx, "Hello, world!", NULL );
+
+  
+
   return rc;
 }

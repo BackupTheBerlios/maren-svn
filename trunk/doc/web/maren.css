@@ -1,0 +1,41 @@
+body {
+	background-color:#fffff0;
+	color:#205050;
+	font-family:sans-serif;
+}
+
+a:link {
+	color:005060;
+}
+
+a:visited {
+	color:#205050;
+}
+
+a:hover {
+	color:#002070;
+}
+
+a:active {
+	color:#0000ff;
+}
+
+h1 {
+	color:#303060;
+	font-size:16pt
+}
+
+h2 {
+	color:#303060;
+	font-size:14pt
+}
+
+h3 {
+	color:#303060;
+	font-size:12pt
+}
+
+pre {
+	color:#303060;
+	font-size:11pt;
+}
