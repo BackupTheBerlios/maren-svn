@@ -42,20 +42,29 @@ maren_std_join_node_ctor( void* where, unsigned int l_sz, unsigned int r_sz )
 }
 
 void
-maren_std_join_node_dtor( MarenStdJoinNode* node )
+maren_std_join_node_dtor( struct sMarenContext* ctx,
+			  MarenStdJoinNode* node )
 {
   if ( !node )
     return;
   
   MarenActiveSet* acts;
   while ( (acts = (MarenActiveSet*)maren_dlist_first( &node->l_list )) ) {
+    MAREN_RT_ASSERT( ctx != NULL,
+		     _("Trying to remove active sets from a std-join-node "
+		       "without having a context.") );
+
     maren_dlist_iter_rm( &node->l_list, (MarenDList*)acts );
-    maren_active_set_delete( acts );
+    maren_active_set_delete( ctx, acts );
   }
 
   while ( (acts = (MarenActiveSet*)maren_dlist_first( &node->r_list )) ) {
+    MAREN_RT_ASSERT( ctx != NULL,
+		     _("Trying to remove active sets from a std-join-node "
+		       "without having a context.") );
+
     maren_dlist_iter_rm( &node->r_list, (MarenDList*)acts );
-    maren_active_set_delete( acts );
+    maren_active_set_delete( ctx, acts );
   }
 
   maren_join_node_dtor( MAREN_JOIN(node) );

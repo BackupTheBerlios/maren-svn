@@ -66,7 +66,7 @@ maren_node_dtor( MarenNode* node )
     free( node->dbg_info );
 }
 
-void maren_node_delete( MarenNode* node )
+void maren_node_delete( struct sMarenContext* ctx, MarenNode* node )
 {
   switch ( maren_node_type( node ) ) {
   case MAREN_NT_BODY:
@@ -86,11 +86,11 @@ void maren_node_delete( MarenNode* node )
     break;
 
   case MAREN_NT_STDJ:
-    maren_std_join_node_delete( MAREN_STDJ(node) );
+    maren_std_join_node_delete( ctx, MAREN_STDJ(node) );
     break;
 
   case MAREN_NT_DCHKJ:
-    maren_dchk_join_node_delete( MAREN_DCHKJ(node) );
+    maren_dchk_join_node_delete( ctx, MAREN_DCHKJ(node) );
     break;
 
   default:

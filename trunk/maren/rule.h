@@ -54,8 +54,9 @@ MAREN_BEGIN_DECL
 
 struct sMarenDList;
 struct sMarenNode;
+struct sMarenContext;
 
-void maren_rule_dtor( struct sMarenDList* rule );
+void maren_rule_dtor( struct sMarenContext* ctx, struct sMarenDList* rule );
 #define maren_rule_delete( rule ) \
    maren_rule_dtor( rule ); \
    free( rule )

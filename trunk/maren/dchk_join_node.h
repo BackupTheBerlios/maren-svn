@@ -27,6 +27,8 @@
 
 MAREN_BEGIN_DECL
 
+struct sMarenContext;
+
 typedef struct {
   MarenJoinNode base;
   MarenDoubleCheckFn check;
@@ -53,9 +55,11 @@ MarenDchkJoinNode* maren_dchk_join_node_ctor( void* where,
 					      unsigned int l_sz,
 					      unsigned int r_sz );
 
-void maren_dchk_join_node_dtor( MarenDchkJoinNode* node );
-#define maren_dchk_join_node_delete( node ) \
-   maren_dchk_join_node_dtor( node ); \
+void maren_dchk_join_node_dtor( struct sMarenContext* ctx,
+				MarenDchkJoinNode* node );
+
+#define maren_dchk_join_node_delete( ctx, node ) \
+   maren_dchk_join_node_dtor( ctx, node ); \
    free( node )
 
 MAREN_END_DECL

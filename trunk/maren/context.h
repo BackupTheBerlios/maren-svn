@@ -20,11 +20,16 @@
  * USA
  *
  * This file is part of the software package MAReN */
+#include <config.h>
 
 #include <stdlib.h>
 #include <stdbool.h>
 
 #include "dlist.h"
+
+#if MAREN_ACTIVE_SET_ALLOC != 0
+#include "as_alloc.h"
+#endif
 
 MAREN_BEGIN_DECL
 
@@ -50,6 +55,9 @@ typedef struct sMarenContext {
   MarenActivePriority* tmpp;	/**< Only, 'caus fire's not MT-safe, anyway */
   struct sMarenHash* start_hash;
   const void* (*fact_key_hash)(const void*,void(**del_key)(void*));
+#if MAREN_ACTIVE_SET_ALLOC != 0
+  MarenActiveSetAlloc as_alloc;
+#endif
 } MarenContext;
 
 #define MAREN_CONTEXT_INIT { { NULL, NULL }, 0, NULL, NULL, NULL }

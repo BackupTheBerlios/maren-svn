@@ -73,6 +73,22 @@ AC_ARG_ENABLE(pmf-conversion,
    esac],
    [CXXFLAGS=${CXXFLAGS}" -Wno-pmf-conversions -DMAREN_USE_PMF_CONVERSION"])
 
+AC_ARG_ENABLE(custom-as-allocator,
+  AS_HELP_STRING([-enable-custom-as-allocator],
+		 [Active Sets (as) are those things, which are rapidly \
+                  allocated and deallocated during fact-insertion and \
+                  fact-removal. So one may use a custom allocator for \
+                  active-sets. [[default=no]]]),
+  [case "${enableval}" in
+   yes) AC_DEFINE([MAREN_ACTIVE_SET_ALLOC],[1],[Type of allocator to use \
+                                                for active sets.]);;
+   no)  AC_DEFINE([MAREN_ACTIVE_SET_ALLOC],[0],[Type of allocator to use \
+                                                for active sets.]);;
+   *) AC_MSG_ERROR(bad valuel ${enableval} for --enable-custom-as-allocator) ;;
+   esac],
+   [AC_DEFINE([MAREN_ACTIVE_SET_ALLOC],[0],[Type of allocator to use \
+                                                     for active sets.])])
+
 AC_CONFIG_FILES([./Makefile
                  maren/Makefile
 		 mpll/Makefile

@@ -35,7 +35,7 @@ namespace maren {
   public:
 
     Rule( void ) { maren_dlist_ctor( &rule_ ); }
-    ~Rule( void ) { maren_rule_dtor( &rule_ ); }
+    ~Rule( void ) { maren_rule_dtor( NULL, &rule_ ); }
 
     template<typename FactType>
     Node addCheck( unsigned int idx, SingleCheck<FactType>* check );

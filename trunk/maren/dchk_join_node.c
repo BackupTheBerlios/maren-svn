@@ -54,7 +54,7 @@ maren_dchk_join_node_ctor( void* where,
 }
 
 void
-maren_dchk_join_node_dtor( MarenDchkJoinNode* node )
+maren_dchk_join_node_dtor( struct sMarenContext* ctx, MarenDchkJoinNode* node )
 {
   if ( !node )
     return;
@@ -64,13 +64,21 @@ maren_dchk_join_node_dtor( MarenDchkJoinNode* node )
   
   MarenActiveSet* acts;
   while ( (acts = (MarenActiveSet*)maren_dlist_first( &node->l_list )) ) {
+    MAREN_RT_ASSERT( ctx != NULL,
+		     _("Trying to remove active sets from a dchk-join-node "
+		       "without having a context.") );
+
     maren_dlist_iter_rm( &node->l_list, (MarenDList*)acts );
-    maren_active_set_delete( acts );
+    maren_active_set_delete( ctx, acts );
   }
 
   while ( (acts = (MarenActiveSet*)maren_dlist_first( &node->r_list )) ) {
+    MAREN_RT_ASSERT( ctx != NULL,
+		     _("Trying to remove active sets from a dchk-join-node "
+		       "without having a context.") );
+
     maren_dlist_iter_rm( &node->r_list, (MarenDList*)acts );
-    maren_active_set_delete( acts );
+    maren_active_set_delete( ctx, acts );
   }
 
   maren_join_node_dtor( MAREN_JOIN(node) );

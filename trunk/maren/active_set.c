@@ -24,12 +24,14 @@
 #include <string.h>
 
 #include "fact_container.h"
+#include "as_alloc.h"
+#include "context.h"
 
 MarenActiveSet*
-maren_active_set_from_fact( MarenFactContainer* fact )
+maren_active_set_from_fact( struct sMarenContext* ctx,
+			    MarenFactContainer* fact )
 {
-  MarenActiveSet* ret = malloc( sizeof(MarenActiveSet)
-				+ sizeof(MarenFactContainer*) );
+  MarenActiveSet* ret = maren_alloc_as( ctx, 1 );
 
   MAREN_RT_ASSERT( ret != NULL, "Malloc failed" );
 
@@ -42,11 +44,10 @@ maren_active_set_from_fact( MarenFactContainer* fact )
 }
 
 MarenActiveSet*
-maren_active_set_join( const MarenActiveSet* as1, const MarenActiveSet* as2 )
+maren_active_set_join( struct sMarenContext* ctx,
+		       const MarenActiveSet* as1, const MarenActiveSet* as2 )
 {
-  MarenActiveSet* ret = malloc( sizeof(MarenActiveSet)
-				+ (as1->size + as2->size)
-				* sizeof(MarenFactContainer*) );
+  MarenActiveSet* ret = maren_alloc_as( ctx, as1->size + as2->size );
   
   MAREN_RT_ASSERT( ret != NULL, "Malloc failed" );
 
@@ -70,7 +71,7 @@ maren_active_set_join( const MarenActiveSet* as1, const MarenActiveSet* as2 )
 }
 
 void
-maren_active_set_delete( MarenActiveSet* as )
+maren_active_set_delete( struct sMarenContext* ctx, MarenActiveSet* as )
 {
   MarenFactContainer **it = as->facts, **end = it + as->size;
   while ( it < end ) {
@@ -79,4 +80,5 @@ maren_active_set_delete( MarenActiveSet* as )
     }
     it++;
   }
+  maren_free_as( ctx, as );
 }

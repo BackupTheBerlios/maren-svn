@@ -27,6 +27,8 @@
 
 MAREN_BEGIN_DECL
 
+struct sMarenContext;
+
 typedef struct sMarenActiveSet {
   struct sMarenActiveSet* p1;
   void* p2;
@@ -34,12 +36,14 @@ typedef struct sMarenActiveSet {
   struct sMarenFactContainer* facts[];
 } MarenActiveSet;
 
-MarenActiveSet* maren_active_set_from_fact( struct sMarenFactContainer* fact );
+MarenActiveSet* maren_active_set_from_fact( struct sMarenContext* ctx,
+					    struct sMarenFactContainer* fact );
 
 MarenActiveSet*
-maren_active_set_join( const MarenActiveSet* as1, const MarenActiveSet* as2 );
+maren_active_set_join( struct sMarenContext* ctx,
+		       const MarenActiveSet* as1, const MarenActiveSet* as2 );
 
-void maren_active_set_delete( MarenActiveSet* as );
+void maren_active_set_delete( struct sMarenContext* ctx, MarenActiveSet* as );
 
 #define maren_active_set_get( as, idx ) \
    ((as)->facts[ idx ]->fact)

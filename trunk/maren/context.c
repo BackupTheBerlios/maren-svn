@@ -155,6 +155,11 @@ maren_context_ctor( void* where )
     ret->tmpp = NULL;
     ret->start_hash = NULL;
     ret->fact_key_hash = NULL;
+#if MAREN_ACTIVE_SET_ALLOC != 0
+    maren_active_set_alloc_ctor( &ret->as_alloc,
+				 MAREN_ACTIVE_SET_ALLOC_SIZE_MAX,
+				 MAREN_ACTIVE_SET_ALLOC_SLOT_MAX );
+#endif
   }
 
   return ret;
@@ -164,7 +169,7 @@ maren_context_ctor( void* where )
 void
 maren_context_dtor( MarenContext* ctx )
 {
-  maren_rule_dtor( &ctx->start_nodes );
+  maren_rule_dtor( ctx, &ctx->start_nodes );
 
   MarenActivePriority* pit = ctx->prios;
   if ( pit ) {
@@ -173,7 +178,7 @@ maren_context_dtor( MarenContext* ctx )
       MarenActiveSet* tmp;
       for ( MarenActiveSet* ait = pit->first_active; ait; ait = tmp ) {
 	tmp = ait->p1;
-	maren_active_set_delete( ait );
+	maren_active_set_delete( ctx, ait );
       }
       pit++;
     }
@@ -183,6 +188,10 @@ maren_context_dtor( MarenContext* ctx )
     maren_hash_delete( ctx->start_hash, true );
     ctx->start_hash = NULL;
   }
+
+#if MAREN_ACTIVE_SET_ALLOC != 0
+  maren_active_set_alloc_dtor( &ctx->as_alloc );
+#endif
 }
 
 /** \internal This macro is only to be used in \c walk_down(). Did
@@ -228,7 +237,7 @@ walk_down( MarenContext* ctx,
 	ADD_CALL_SUCCESSORS;
       }
       else {
-	maren_active_set_delete( acts );
+	maren_active_set_delete( ctx, acts );
 	goto leave_loop;
       }
       break;
@@ -241,7 +250,7 @@ walk_down( MarenContext* ctx,
 	ADD_CALL_SUCCESSORS;
       }
       else {
-	maren_active_set_delete( acts );
+	maren_active_set_delete( ctx, acts );
 	goto leave_loop;
       }
       break;
@@ -257,7 +266,8 @@ walk_down( MarenContext* ctx,
 	    ret += walk_down( ctx,
 			      lit->node,
 			      lit->type,
-			      maren_active_set_join( acts,
+			      maren_active_set_join( ctx,
+						     acts,
 						   (MarenActiveSet*)o_set ) );
 	    lit++;
 	  }
@@ -273,7 +283,8 @@ walk_down( MarenContext* ctx,
 	    ret += walk_down( ctx,
 			      lit->node,
 			      lit->type,
-			      maren_active_set_join( (MarenActiveSet*)o_set,
+			      maren_active_set_join( ctx,
+						     (MarenActiveSet*)o_set,
 						     acts ) );
 	    lit++;
 	  }
@@ -307,7 +318,8 @@ walk_down( MarenContext* ctx,
 	      ret += walk_down( ctx,
 				lit->node,
 				lit->type,
-				maren_active_set_join( acts,
+				maren_active_set_join( ctx,
+						       acts,
 						    (MarenActiveSet*)o_set ) );
 	      lit++;
 	    }
@@ -331,7 +343,8 @@ walk_down( MarenContext* ctx,
 	      ret += walk_down( ctx,
 				lit->node,
 				lit->type,
-				maren_active_set_join( (MarenActiveSet*)o_set,
+				maren_active_set_join( ctx,
+						       (MarenActiveSet*)o_set,
 						       acts ) );
 	      lit++;
 	    }
@@ -398,7 +411,7 @@ int maren_context_add_factc( MarenContext* ctx,
       ret += walk_down( ctx,
 			MAREN_NODE(sn),
 			MAREN_NL_TOP,
-			maren_active_set_from_fact( fact_cntr ) );
+			maren_active_set_from_fact( ctx, fact_cntr ) );
       maren_hash_iter_nexteq( &hit );
     }
   }
@@ -408,7 +421,7 @@ int maren_context_add_factc( MarenContext* ctx,
       ret += walk_down( ctx,
 			MAREN_NODE(sn),
 			MAREN_NL_TOP,
-			maren_active_set_from_fact( fact_cntr ) );
+			maren_active_set_from_fact( ctx, fact_cntr ) );
     }
   }
 
@@ -448,14 +461,15 @@ maren_context_add_fact( MarenContext* ctx,
    lit = MAREN_INNER(node)->succs; \
    lend = lit + (MAREN_INNER(node)->succ_num - 1); \
    while ( lit < lend ) { \
-      remove_fact( lit->node, lit->type, idx, fact ); \
+      remove_fact( ctx, lit->node, lit->type, idx, fact ); \
       lit++; \
    } \
    node = lend->node; \
    link_type = lend->type
 
 static void
-remove_fact( MarenNode* node,
+remove_fact( MarenContext* ctx,
+	     MarenNode* node,
 	     MarenNodeLinkType link_type,
 	     unsigned int idx,
 	     const void *fact )
@@ -494,7 +508,7 @@ remove_fact( MarenNode* node,
 	    kill_set = (MarenActiveSet*)acts;
 	    kill_set->facts[ idx ]->removed = true;
 	    acts = maren_dlist_iter_rm( &(MAREN_STDJ(node)->l_list), acts );
-	    maren_active_set_delete( kill_set );
+	    maren_active_set_delete( ctx, kill_set );
 	  }
 	  else {
 	    acts = maren_dlist_iter_next( acts );
@@ -509,7 +523,7 @@ remove_fact( MarenNode* node,
 	    kill_set = (MarenActiveSet*)acts;
 	    kill_set->facts[ idx ]->removed = true;
 	    acts = maren_dlist_iter_rm( &(MAREN_STDJ(node)->r_list), acts );
-	    maren_active_set_delete( kill_set );
+	    maren_active_set_delete( ctx, kill_set );
 	  }
 	  else {
 	    acts = maren_dlist_iter_next( acts );
@@ -537,7 +551,7 @@ remove_fact( MarenNode* node,
 	    kill_set = (MarenActiveSet*)acts;
 	    kill_set->facts[ idx ]->removed = true;
 	    acts = maren_dlist_iter_rm( &(MAREN_DCHKJ(node)->l_list), acts );
-	    maren_active_set_delete( kill_set );
+	    maren_active_set_delete( ctx, kill_set );
 	  }
 	  else {
 	    acts = maren_dlist_iter_next( acts );
@@ -552,7 +566,7 @@ remove_fact( MarenNode* node,
 	    kill_set = (MarenActiveSet*)acts;
 	    kill_set->facts[ idx ]->removed = true;
 	    acts = maren_dlist_iter_rm( &MAREN_DCHKJ(node)->r_list, acts );
-	    maren_active_set_delete( kill_set );
+	    maren_active_set_delete( ctx, kill_set );
 	  }
 	  else {
 	    acts = maren_dlist_iter_next( acts );
@@ -597,7 +611,7 @@ maren_context_rm_fact( MarenContext* ctx, const void* fact )
 
     while ( maren_hash_iter_good( &hit ) ) {
       sn = maren_hash_iter_data( &hit );
-      remove_fact( MAREN_NODE(sn), MAREN_NL_TOP, 0,fact );
+      remove_fact( ctx, MAREN_NODE(sn), MAREN_NL_TOP, 0,fact );
     }
 
     if ( del_hash_key ) {
@@ -607,7 +621,7 @@ maren_context_rm_fact( MarenContext* ctx, const void* fact )
   else {
     maren_dlist_for_each( start, &ctx->start_nodes ) {
       sn = maren_dlist_iter_oget( start, MarenStartNode, list );
-      remove_fact( MAREN_NODE(sn), MAREN_NL_TOP, 0, fact );
+      remove_fact( ctx, MAREN_NODE(sn), MAREN_NL_TOP, 0, fact );
     }
   }
 }
@@ -628,7 +642,7 @@ maren_context_fire_activated( MarenContext* ctx )
       body = MAREN_BODY(it->p2);
       body->action( body->data, ctx, it );
       tmp = it->p1;
-      maren_active_set_delete( it );
+      maren_active_set_delete( ctx, it );
       it = tmp;
     }
     prio->first_active = prio->last_active = NULL;

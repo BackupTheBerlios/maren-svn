@@ -29,28 +29,29 @@
 #include "body_node.h"
 #include "std_join_node.h"
 
-static void delete_rule_node( MarenNode* node )
+static void delete_rule_node( struct sMarenContext* ctx, MarenNode* node )
 {
   if ( maren_node_is_inner( node ) ) {
     MarenNodeLink *it = MAREN_INNER(node)->succs;
     MarenNodeLink *end = it + MAREN_INNER(node)->succ_num;
     while ( it < end ) {
       if ( it->type != MAREN_NL_RIGHT )
-	delete_rule_node( it->node );
+	delete_rule_node( ctx, it->node );
       it++;
     }
   }
-  maren_node_delete( node );
+  maren_node_delete( ctx, node );
 }
 
 void
-maren_rule_dtor( MarenDList* rule )
+maren_rule_dtor( struct sMarenContext* ctx, MarenDList* rule )
 {
   MarenDList *start;
 
   while ( (start = maren_dlist_first( rule )) ) {
     maren_dlist_iter_rm( rule, start );
-    delete_rule_node( MAREN_NODE(maren_dlist_iter_oget( start,
+    delete_rule_node( ctx,
+		      MAREN_NODE(maren_dlist_iter_oget( start,
 							MarenStartNode,
 							list )) );
   }

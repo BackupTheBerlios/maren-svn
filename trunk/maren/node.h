@@ -48,7 +48,9 @@ MAREN_BEGIN_DECL
  *  +-------------+ +--------------+ +-------------+ +--------------+
  *  | StdJoinNode | | DchkJoinNode | | MapJoinNode | | HashJoinNode |
  *  +-------------+ +--------------+ +-------------+ +--------------+
- */                           
+ */                  
+         
+struct sMarenContext;
 
 typedef enum { 
   MAREN_NT_NODE = 0,
@@ -91,7 +93,7 @@ void maren_node_dtor( MarenNode* node );
  *  }
  *  \endcode
  */
-void maren_node_delete( MarenNode* node );
+void maren_node_delete( struct sMarenContext* ctx, MarenNode* node );
 
 void maren_node_set_dbg_info( MarenNode* node, const char* txt, ... );
 

@@ -26,6 +26,8 @@
 
 MAREN_BEGIN_DECL
 
+struct sMarenContext;
+
 typedef struct {
   MarenJoinNode base;
   MarenDList l_list, r_list;
@@ -43,9 +45,11 @@ MarenStdJoinNode* maren_std_join_node_ctor( void* where,
 					    unsigned int l_sz,
 					    unsigned int r_sz );
 
-void maren_std_join_node_dtor( MarenStdJoinNode* node );
-#define maren_std_join_node_delete( node ) \
-   maren_std_join_node_dtor( node ); \
+void maren_std_join_node_dtor( struct sMarenContext* ctx, 
+			       MarenStdJoinNode* node );
+
+#define maren_std_join_node_delete( ctx, node ) \
+   maren_std_join_node_dtor( ctx, node ); \
    free( node )
 
 MAREN_END_DECL
