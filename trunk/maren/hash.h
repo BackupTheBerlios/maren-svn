@@ -69,9 +69,9 @@ const void* maren_hash_iter_next( MarenHashIter* iter );
 const void* maren_hash_iter_nexteq( MarenHashIter* iter );
 
 MarenHash* maren_hash_create( MarenHash* where,
-			  unsigned long (*hash)(const void*),
-			  int (*cmp)(const void*, const void*),
-			  size_t num_buckets );
+			      unsigned long (*hash)(const void*),
+			      int (*cmp)(const void*, const void*),
+			      size_t num_buckets );
 			    
 void maren_hash_delete( MarenHash* hash, int free_hash );
 

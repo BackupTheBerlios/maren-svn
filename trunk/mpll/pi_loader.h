@@ -24,6 +24,7 @@
 #include <stddef.h>
 
 #include <maren/dlist.h>
+#include <maren/hash.h>
 
 MAREN_BEGIN_DECL
 
@@ -35,9 +36,8 @@ typedef struct {
 typedef struct {
   MarenDList pi_paths;
   size_t path_len_max;
+  MarenHash pi_hash;
 } MpllPluginLoder;
-
-#define MPLL_PLUGIN_LOADER_INIT { MAREN_DLIST_INIT }
 
 MpllPluginLoder* mpll_plugin_loader_ctor( void* where );
 

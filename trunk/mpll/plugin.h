@@ -27,14 +27,14 @@
 MAREN_BEGIN_DECL
 
 typedef struct {
-  const char* plugin;
+  const char* name;
   void* dl;
   MpllData* datas;
   MpllSingleCheckPi* single_checks;
 } MpllPlugin;
 
-MpllPlugin* mpll_plugin_load( const MpllPluginLoder* loader,
-			      const char* plugin );
+const MpllPlugin* mpll_plugin_load( MpllPluginLoder* loader,
+				    const char* plugin );
 
 MAREN_END_DECL
 #endif /* MAREN_MPLL_PLUGIN_H */

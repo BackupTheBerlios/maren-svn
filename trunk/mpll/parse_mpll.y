@@ -81,6 +81,9 @@ import_list
 
 single_import
    : q_name
+     {
+       
+     }
    | q_name KW_AS IDENTIFIER
    ;
 

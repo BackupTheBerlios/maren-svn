@@ -58,8 +58,8 @@ complete_plugin( MpllPlugin* plugin )
   return true;
 }
 
-MpllPlugin* mpll_plugin_load( const MpllPluginLoder* loader,
-			      const char* plugin )
+static MpllPlugin*
+dlload_plugin( MpllPluginLoder* loader, const char* plugin )
 {
   char filename[ sizeof(path_template) - 4
 		 + loader->path_len_max
@@ -76,7 +76,7 @@ MpllPlugin* mpll_plugin_load( const MpllPluginLoder* loader,
     if ( (dl = dlopen( filename, RTLD_NOW )) ) {
       MpllPlugin* ret = malloc( sizeof(MpllPlugin) );
       MAREN_RT_ASSERT( ret != NULL, "Malloc failed.");
-      ret->plugin = plugin;
+      ret->name = plugin;
       ret->dl = dl;
       if ( !complete_plugin( ret ) ) {
 	dlclose( dl );
@@ -93,4 +93,16 @@ MpllPlugin* mpll_plugin_load( const MpllPluginLoder* loader,
   }
 
   return NULL;
+}
+
+const MpllPlugin*
+mpll_plugin_load( MpllPluginLoder* loader, const char* plugin )
+{
+  MpllPlugin key;
+  const MpllPlugin* pi;
+
+  key.name = plugin;
+  pi = maren_hash_search( &loader->pi_hash, &key, NULL );
+  
+  return pi ? pi : dlload_plugin( loader, plugin );
 }

@@ -24,6 +24,19 @@
 #include <string.h>
 
 #include "pi_loader.h"
+#include "plugin.h"
+
+static unsigned long
+pi_hash_fn( const MpllPlugin* pi )
+{
+  return maren_binary_hash( 0, pi->name, strlen(pi->name) );
+}
+
+static int
+pi_cmp_fn( const MpllPlugin* pi1, const MpllPlugin* pi2 )
+{
+  return strcmp( pi1->name, pi2->name );
+}
 
 MpllPluginLoder*
 mpll_plugin_loader_ctor( void* where )
@@ -33,6 +46,10 @@ mpll_plugin_loader_ctor( void* where )
   if ( ret ) {
     maren_dlist_ctor( &ret->pi_paths );
     ret->path_len_max = 0;
+    maren_hash_create( &ret->pi_hash,
+		       (unsigned long(*)(const void*))pi_hash_fn,
+		       (int(*)(const void*,const void*))pi_cmp_fn,
+		       0 );
   }
 
   return ret;
